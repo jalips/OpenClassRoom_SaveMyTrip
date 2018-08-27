@@ -2,16 +2,22 @@ package com.openclassrooms.savemytrip.todolist;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -23,6 +29,8 @@ import com.openclassrooms.savemytrip.models.Item;
 import com.openclassrooms.savemytrip.models.User;
 import com.openclassrooms.savemytrip.utils.ItemClickSupport;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,6 +38,8 @@ import butterknife.OnClick;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class TodoListActivity extends BaseActivity implements ItemAdapter.Listener {
+
+    private static final String TAG = "TodoListActivity";
 
     // FOR DESIGN
     @BindView(R.id.todo_list_activity_recycler_view) RecyclerView recyclerView;
@@ -43,6 +53,7 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
     private ItemViewModel itemViewModel;
     private ItemAdapter adapter;
     private static int USER_ID = 1;
+    private static int RESULT_LOAD_IMAGE = 1;
 
     @Override
     public int getLayoutContentViewID() { return R.layout.activity_todo_list; }
@@ -63,6 +74,35 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
     // -------------------
     // ACTIONS
     // -------------------
+
+    @OnClick(R.id.todo_list_activity_button_add_img)
+    public void onClickAddimgButton() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(buttonAddImg);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
+            }
+
+        }else {
+            Toast.makeText(this, "You haven't picked Image",Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     @OnClick(R.id.todo_list_activity_button_add)
     public void onClickAddButton() { this.createItem(); }
