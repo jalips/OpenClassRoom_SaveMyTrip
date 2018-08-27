@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
@@ -38,31 +39,41 @@
         android:layout_above="@id/todo_list_activity_relative_layout_bottom"
         android:layout_below="@id/todo_list_activity_header"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/todo_list_activity_relative_layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin"
-        android:layout_above="@id/todo_list_activity_button_add">
+        android:layout_above="@id/todo_list_activity_button_add"
+        android:layout_margin="@dimen/default_margin">
 
         <!-- EDIT TEXT  -->
+
+        <ImageButton
+            android:id="@+id/todo_list_activity_button_add_img"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/ic_note_add_black_24px"
+            />
+
         <EditText
             android:id="@+id/todo_list_activity_edit_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/default_text_size"
             android:hint="@string/todolist_things_todo"
-            android:layout_toLeftOf="@id/todo_list_activity_spinner"/>
+            android:textSize="@dimen/default_text_size"
+            android:layout_weight="8"
+            />
 
         <!-- SPINNER  -->
         <Spinner
             android:id="@+id/todo_list_activity_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textSize="@dimen/default_text_size"/>
+            android:layout_weight="1"
+            />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <!-- BUTTON TODOLIST -->
     <Button

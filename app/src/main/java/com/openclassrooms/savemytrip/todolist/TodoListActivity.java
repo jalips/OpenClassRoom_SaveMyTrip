@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
     @BindView(R.id.todo_list_activity_edit_text) EditText editText;
     @BindView(R.id.todo_list_activity_header_profile_image) ImageView profileImage;
     @BindView(R.id.todo_list_activity_header_profile_text) TextView profileText;
+    @BindView(R.id.todo_list_activity_button_add_img) ImageButton buttonAddImg;
 
     // FOR DATA
     private ItemViewModel itemViewModel;
