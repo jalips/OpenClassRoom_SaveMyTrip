@@ -1,15 +1,22 @@
 package com.openclassrooms.savemytrip.todolist;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.openclassrooms.savemytrip.R;
 import com.openclassrooms.savemytrip.models.Item;
 
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
@@ -23,6 +30,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     @BindView(R.id.activity_todo_list_item_text) TextView textView;
     @BindView(R.id.activity_todo_list_item_image) ImageView imageView;
+    @BindView(R.id.activity_todo_list_item_image_custom) ImageView imageViewCustom;
     @BindView(R.id.activity_todo_list_item_remove) ImageButton imageButton;
 
     // FOR DATA
@@ -52,6 +60,21 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else {
             textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+
+        if(!item.getImageUri().equals("")){
+            Uri mUri = Uri.parse(item.getImageUri());
+
+            Log.i("TEST Ok : ", mUri.toString());
+
+
+            this.imageViewCustom.setImageURI(mUri);
+
+            /*
+            final InputStream imageStream = getContentResolver().openInputStream(mUri);
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(buttonAddImg);
+            */
         }
     }
 

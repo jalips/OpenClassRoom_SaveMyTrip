@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.ContentValues;
+import android.graphics.Bitmap;
+import android.net.Uri;
 
 /**
  * Created by Philippe on 08/03/2018.
@@ -20,6 +22,7 @@ public class Item {
     private int category;
     private Boolean isSelected;
     private long userId;
+    private String imageUri;
 
     public Item() { }
 
@@ -28,6 +31,16 @@ public class Item {
         this.category = category;
         this.userId = userID;
         this.isSelected = false;
+    }
+
+    public Item(String text, int category, long userID, Uri imageUri) {
+        this.text = text;
+        this.category = category;
+        this.userId = userID;
+        this.isSelected = false;
+        if(imageUri != null){
+            this.imageUri = imageUri.toString();
+        }
     }
 
     // --- GETTER ---
@@ -44,6 +57,14 @@ public class Item {
     public void setSelected(Boolean selected) { isSelected = selected; }
     public void setUserId(long userId) { this.userId = userId; }
 
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
     // --- UTILS ---
     public static Item fromContentValues(ContentValues values) {
         final Item item = new Item();
@@ -51,6 +72,7 @@ public class Item {
         if (values.containsKey("category")) item.setCategory(values.getAsInteger("category"));
         if (values.containsKey("isSelected")) item.setSelected(values.getAsBoolean("isSelected"));
         if (values.containsKey("userId")) item.setUserId(values.getAsLong("userId"));
+        if (values.containsKey("imageUri")) item.setImageUri(values.getAsString("imageUri"));
         return item;
     }
 }

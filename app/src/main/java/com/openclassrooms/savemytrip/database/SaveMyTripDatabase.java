@@ -18,7 +18,7 @@ import com.openclassrooms.savemytrip.models.User;
  * Created by Philippe on 27/02/2018.
  */
 
-@Database(entities = {Item.class, User.class}, version = 1, exportSchema = false)
+@Database(entities = {Item.class, User.class}, version = 2, exportSchema = false)
 public abstract class SaveMyTripDatabase extends RoomDatabase {
 
     // --- SINGLETON ---

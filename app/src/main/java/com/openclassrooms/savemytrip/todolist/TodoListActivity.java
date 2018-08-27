@@ -28,6 +28,7 @@ import com.openclassrooms.savemytrip.injection.ViewModelFactory;
 import com.openclassrooms.savemytrip.models.Item;
 import com.openclassrooms.savemytrip.models.User;
 import com.openclassrooms.savemytrip.utils.ItemClickSupport;
+import com.openclassrooms.savemytrip.utils.StorageUtils;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -54,6 +55,8 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
     private ItemAdapter adapter;
     private static int USER_ID = 1;
     private static int RESULT_LOAD_IMAGE = 1;
+
+    private Uri imageUri;
 
     @Override
     public int getLayoutContentViewID() { return R.layout.activity_todo_list; }
@@ -88,9 +91,18 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
 
         if (resultCode == RESULT_OK) {
             try {
-                final Uri imageUri = data.getData();
+                this.imageUri = data.getData();
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+                if (StorageUtils.isExternalStorageWritable()){
+
+
+
+                }
+
+
+
                 Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(buttonAddImg);
 
             } catch (FileNotFoundException e) {
@@ -133,7 +145,7 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
     }
 
     private void createItem(){
-        Item item = new Item(this.editText.getText().toString(), this.spinner.getSelectedItemPosition(), USER_ID);
+        Item item = new Item(this.editText.getText().toString(), this.spinner.getSelectedItemPosition(), USER_ID, this.imageUri);
         this.editText.setText("");
         this.itemViewModel.createItem(item);
     }
