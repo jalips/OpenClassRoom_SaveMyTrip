@@ -5,8 +5,10 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +32,11 @@ import com.openclassrooms.savemytrip.models.User;
 import com.openclassrooms.savemytrip.utils.ItemClickSupport;
 import com.openclassrooms.savemytrip.utils.StorageUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -95,15 +101,15 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), selectedImage);
+                buttonAddImg.setBackground(bitmapDrawable);
+                //Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(buttonAddImg);
+
                 if (StorageUtils.isExternalStorageWritable()){
 
 
 
                 }
-
-
-
-                Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(buttonAddImg);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -120,7 +126,44 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
     public void onClickAddButton() { this.createItem(); }
 
     @Override
-    public void onClickDeleteButton(int position) { this.deleteItem(this.adapter.getItem(position)); }
+    public void onClickDeleteButton(int position) {
+        Log.i(TAG, "DELETE");
+        this.deleteItem(this.adapter.getItem(position));
+    }
+
+    @Override
+    public void onClickShareButton(int position) {
+        Log.i(TAG, "SHARE");
+        /*
+        Item item = this.adapter.getItem(position);
+        Uri mUri = Uri.parse(item.getImageUri());
+        final InputStream imageStream;
+        try {
+            imageStream = getContentResolver().openInputStream(mUri);
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("image/jpeg");
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            File f = new File(Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpg");
+            try {
+                f.createNewFile();
+                FileOutputStream fo = new FileOutputStream(f);
+                fo.write(bytes.toByteArray());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/temporary_file.jpg"));
+            startActivity(Intent.createChooser(share, "Share Image"));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
+        }
+        */
+    }
+
 
     // -------------------
     // DATA
@@ -148,6 +191,7 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
         Item item = new Item(this.editText.getText().toString(), this.spinner.getSelectedItemPosition(), USER_ID, this.imageUri);
         this.editText.setText("");
         this.itemViewModel.createItem(item);
+        this.buttonAddImg.setBackgroundResource(R.drawable.baseline_photo_size_select_actual_black_24);
     }
 
     private void deleteItem(Item item){

@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_note_add_black_24px"
+            android:background="@drawable/baseline_photo_size_select_actual_black_24"
             />
 
         <EditText

@@ -19,7 +19,10 @@ import java.util.List;
 public class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     // CALLBACK
-    public interface Listener { void onClickDeleteButton(int position); }
+    public interface Listener {
+        void onClickDeleteButton(int position);
+        void onClickShareButton(int position);
+    }
     private final Listener callback;
 
     // FOR DATA

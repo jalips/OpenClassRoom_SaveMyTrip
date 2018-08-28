@@ -32,6 +32,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     @BindView(R.id.activity_todo_list_item_image) ImageView imageView;
     @BindView(R.id.activity_todo_list_item_image_custom) ImageView imageViewCustom;
     @BindView(R.id.activity_todo_list_item_remove) ImageButton imageButton;
+    @BindView(R.id.activity_todo_list_item_share) ImageButton imageButtonShare;
 
     // FOR DATA
     private WeakReference<ItemAdapter.Listener> callbackWeakRef;
@@ -45,6 +46,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.callbackWeakRef = new WeakReference<ItemAdapter.Listener>(callback);
         this.textView.setText(item.getText());
         this.imageButton.setOnClickListener(this);
+        this.imageButtonShare.setOnClickListener(this);
         switch (item.getCategory()){
             case 0: // TO VISIT
                 this.imageView.setBackgroundResource(R.drawable.ic_room_black_24px);
@@ -62,12 +64,10 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
-        if(!item.getImageUri().equals("")){
+        if(item.getImageUri() != null){
             Uri mUri = Uri.parse(item.getImageUri());
 
             Log.i("TEST Ok : ", mUri.toString());
-
-
             this.imageViewCustom.setImageURI(mUri);
 
             /*
@@ -75,12 +75,24 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
             Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(buttonAddImg);
             */
+        }else{
+            this.imageViewCustom.setVisibility(View.GONE);
+            this.imageButtonShare.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onClick(View view) {
         ItemAdapter.Listener callback = callbackWeakRef.get();
-        if (callback != null) callback.onClickDeleteButton(getAdapterPosition());
+        if (callback != null){
+            if (view.getId() == R.id.activity_todo_list_item_remove) {
+                callback.onClickDeleteButton(getAdapterPosition());
+            }
+
+            if (view.getId() == R.id.activity_todo_list_item_share) {
+                callback.onClickShareButton(getAdapterPosition());
+            }
+        }
     }
+
 }
