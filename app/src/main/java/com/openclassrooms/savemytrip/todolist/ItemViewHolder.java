@@ -69,12 +69,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
             Log.i("TEST Ok : ", mUri.toString());
             this.imageViewCustom.setImageURI(mUri);
-
-            /*
-            final InputStream imageStream = getContentResolver().openInputStream(mUri);
-            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(buttonAddImg);
-            */
         }else{
             this.imageViewCustom.setVisibility(View.GONE);
             this.imageButtonShare.setVisibility(View.GONE);

@@ -44,6 +44,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 public class TodoListActivity extends BaseActivity implements ItemAdapter.Listener {
 
     private static final String TAG = "TodoListActivity";
@@ -86,7 +89,12 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
 
     @OnClick(R.id.todo_list_activity_button_add_img)
     public void onClickAddimgButton() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        //Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+        photoPickerIntent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+        photoPickerIntent.addFlags(FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
     }
@@ -103,13 +111,6 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
 
                 BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), selectedImage);
                 buttonAddImg.setBackground(bitmapDrawable);
-                //Glide.with(this).load(selectedImage).apply(RequestOptions.circleCropTransform()).into(buttonAddImg);
-
-                if (StorageUtils.isExternalStorageWritable()){
-
-
-
-                }
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -134,34 +135,14 @@ public class TodoListActivity extends BaseActivity implements ItemAdapter.Listen
     @Override
     public void onClickShareButton(int position) {
         Log.i(TAG, "SHARE");
-        /*
+
         Item item = this.adapter.getItem(position);
         Uri mUri = Uri.parse(item.getImageUri());
-        final InputStream imageStream;
-        try {
-            imageStream = getContentResolver().openInputStream(mUri);
-            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setType("image/jpeg");
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            File f = new File(Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpg");
-            try {
-                f.createNewFile();
-                FileOutputStream fo = new FileOutputStream(f);
-                fo.write(bytes.toByteArray());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/temporary_file.jpg"));
-            startActivity(Intent.createChooser(share, "Share Image"));
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
-        }
-        */
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("image/*");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, mUri);
+        startActivity(Intent.createChooser(sharingIntent, "Share Image"));
     }
 
 
